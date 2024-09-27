@@ -4,7 +4,7 @@ library(dplyr)
 library(stringr)
 
 
-args <- commandArgs(trailingOnly = TRUE)d
+args <- commandArgs(trailingOnly = TRUE)
 print("# collect the result")
 vec <- c()
 for (j in c(20,18,16,14,12,10)) {

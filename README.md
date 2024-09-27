@@ -3,7 +3,7 @@ We recommend to create the environment before running the script.
 conda create --name env bioconda::cutadapt bioconda::seqkit bioconda::porechop bioconda::spades bioconda::minimap2 bioconda::samtools bioconda::centrifuge -y
 ```
 
-Please install the following R pacakges before running the script
+Please install the following R packages before running the script.
 1. msa (https://github.com/UBod/msa)
 2. Biostrings (https://github.com/Bioconductor/Biostrings)
 3. gtools (https://github.com/r-gregmisc/gtools)

@@ -20,7 +20,6 @@ cutadapt -u -9 -o ${output_name}/trimmed_read_2.fq ${output_name}/trimmed_read_1
 echo "###### STEP 3: discard adapter  ######"
 porechop -i ${output_name}/trimmed_read_2.fq -o ${output_name}/clean_read.fq --discard_middle 
     
-    
 echo "###### STEP 4: select dengue 2 reads from centrifuge  ######"	
 centrifuge -x db/p_compressed+h+v -U ${output_name}/clean_read.fq --report-file ${output_name}/report.txt -S ${output_name}/results.txt 
 
@@ -37,10 +36,10 @@ for quality in 20 18 16 14 12 10;
 do   
     for kmers in 127 111 99 77 55 33 11;
     do         
-	    #5.1 assemble
-	    output_SPAdes=$(echo ${output_name}/assembly/${quality}_${kmers})
+	#5.1 assemble
+	output_SPAdes=$(echo ${output_name}/assembly/${quality}_${kmers})
 	    
-	    gunzip -c ${output_name}/viral_read.fq.gz | NanoFilt -q $quality | gzip -9 > ${output_name}/viral_read_Q_${quality}.fq.gz
+	gunzip -c ${output_name}/viral_read.fq.gz | NanoFilt -q $quality | gzip -9 > ${output_name}/viral_read_Q_${quality}.fq.gz
         spades.py -s ${output_name}/viral_read_Q_${quality}.fq.gz -k $kmers -o  ${output_SPAdes}/
         
         #5.2 filter the contig with length over 1k bps

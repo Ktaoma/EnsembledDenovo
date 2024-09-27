@@ -112,7 +112,7 @@ combineAA <- do.call(c,AA_vec)
 combineDNA <- do.call(c,DNA_vec)
 writeXStringSet(combineAA,paste0(args[1],"/assembly/AA_best.fa"))
 writeXStringSet(combineDNA,paste0(args[1],"/assembly/DNA_best.fa"))
-dat_final %>% write.csv(paste0(args[1],"/assembly/depth_final.fa"))
+dat_final %>% write.csv(paste0(args[1],"/assembly/Depth_final.txt"))
 
 
 

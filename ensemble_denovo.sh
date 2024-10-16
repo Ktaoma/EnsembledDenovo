@@ -19,10 +19,10 @@ cutadapt -u -9 -o ${output_name}/trimmed_read_2.fq ${output_name}/trimmed_read_1
 
 echo "###### STEP 3: discard adapter  ######"
 porechop -i ${output_name}/trimmed_read_2.fq -o ${output_name}/clean_read.fq --discard_middle 
-    
+
+
 echo "###### STEP 4: select dengue 2 reads from centrifuge  ######"	
 centrifuge -x db/p_compressed+h+v -U ${output_name}/clean_read.fq --report-file ${output_name}/report.txt -S ${output_name}/results.txt 
-
 #modify the header name
 path=$(echo ${output_name}/report.txt)
 id=$(cat $path | grep "Dengue" | sort -t$'\t' -k5 -n | tail -n 1 | cut -f2)
@@ -35,11 +35,12 @@ echo "###### STEP 5: genome assembly +  grid search ######"
 for quality in 20 18 16 14 12 10;
 do   
     for kmers in 127 111 99 77 55 33 11;
-    do         
-	#5.1 assemble
-	output_SPAdes=$(echo ${output_name}/assembly/${quality}_${kmers})
-	    
-	gunzip -c ${output_name}/viral_read.fq.gz | NanoFilt -q $quality | gzip -9 > ${output_name}/viral_read_Q_${quality}.fq.gz
+    do
+             
+	    #5.1 assemble
+	    output_SPAdes=$(echo ${output_name}/assembly/${quality}_${kmers})
+	        
+	    gunzip -c ${output_name}/viral_read.fq.gz | NanoFilt -q $quality | gzip -9 > ${output_name}/viral_read_Q_${quality}.fq.gz
         spades.py -s ${output_name}/viral_read_Q_${quality}.fq.gz -k $kmers -o  ${output_SPAdes}/
         
         #5.2 filter the contig with length over 1k bps
@@ -61,7 +62,8 @@ do
         minimap2 -a ${output_SPAdes}/QC_scaffold_final.fasta ${output_name}/viral_read_Q_${quality}.fq.gz > ${output_SPAdes}/map_read_virus.sam
         samtools sort ${output_SPAdes}/map_read_virus.sam -o ${output_SPAdes}/map_read_virus.bam
         samtools index ${output_SPAdes}/map_read_virus.bam
-        samtools depth ${output_SPAdes}/map_read_virus.bam > ${output_SPAdes}/depth_virus.txt        
+        samtools depth ${output_SPAdes}/map_read_virus.bam > ${output_SPAdes}/depth_virus.txt  
+        
     done
 done   
 
@@ -70,9 +72,12 @@ echo "###### STEP 6: ensemble the assembled genome ######"
 Rscript ensemble.R ${output_name}
 
 
-
-
-
+echo "###### STEP 7: collect the result ######"    
+quality_final=$(cat ${output_name}/best_AA.fa | grep ">" | cut -d '_' -f2)
+kmer_final=$(cat ${output_name}/best_AA.fa | grep ">" | cut -d '_' -f4)
+mkdir ${output_name}/final_output
+mv ${output_name}/best_*.fa  ${output_name}/final_output/
+cp ${output_name}/assembly/${quality_final}_${kmer_final}/depth_virus.txt ${output_name}/final_output/
 
 
 

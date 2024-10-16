@@ -33,5 +33,3 @@ The output consists of three files as shown in the `example_output` directory
 2. best_DNA.fa
 3. depth_virus.txt
 
-In this example, 4 out of 42 sets of hyperpameters were selected as the optimal hyperparameters as it can assemble the genome and translate into full AA length in this sample.
-Any of them can be used as the representative of this sample for the downstream analysis.
